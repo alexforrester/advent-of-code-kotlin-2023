@@ -3,73 +3,72 @@ import java.util.TreeMap
 
 fun main() {
 
-    fun getNumbersAsWordsFirst(inputStream: InputStream) {
+    val inputStream = readInputStream("day1_input")
+    val total = getNumbersAsWordsFirst(inputStream)
+    total.println()
+}
 
-        var total = 0
+fun getNumbersAsWordsFirst(inputStream: InputStream) : Int {
 
-        // Create map of starting positions for each string
-        val numberTextList = mapOf(
-            "one" to 1,
-            "two" to 2,
-            "three" to 3,
-            "four" to 4,
-            "five" to 5,
-            "six" to 6,
-            "seven" to 7,
-            "eight" to 8,
-            "nine" to 9,
-        )
+    var total = 0
 
-        inputStream.bufferedReader().forEachLine { inputLine ->
+    // Create map of starting positions for each string
+    val numberTextList = mapOf(
+        "one" to 1,
+        "two" to 2,
+        "three" to 3,
+        "four" to 4,
+        "five" to 5,
+        "six" to 6,
+        "seven" to 7,
+        "eight" to 8,
+        "nine" to 9,
+    )
 
-            val numbersPositionHashmap = TreeMap<Int, Int>()
+    inputStream.bufferedReader().forEachLine { inputLine ->
 
-            val firstDigitPos = inputLine.indexOfFirst { it.isDigit() }
+        val numbersPositionHashmap = TreeMap<Int, Int>()
 
-            if (firstDigitPos != -1) {
-                val lineArray: Array<String> =
-                    inputLine.toCharArray().map { it.toString() }.toTypedArray()
+        val firstDigitPos = inputLine.indexOfFirst { it.isDigit() }
 
-                val firstDigit = lineArray[firstDigitPos].toInt()
+        if (firstDigitPos != -1) {
+            val lineArray: Array<String> =
+                inputLine.toCharArray().map { it.toString() }.toTypedArray()
 
-                val lastDigitPos = inputLine.indexOfLast { it.isDigit() }
-                val lastDigit = lineArray[lastDigitPos].toInt()
+            val firstDigit = lineArray[firstDigitPos].toInt()
 
-                numbersPositionHashmap[firstDigitPos] = firstDigit
-                numbersPositionHashmap[lastDigitPos] = lastDigit
-            }
+            val lastDigitPos = inputLine.indexOfLast { it.isDigit() }
+            val lastDigit = lineArray[lastDigitPos].toInt()
 
-            numberTextList.keys.forEach { numberWord ->
-
-                var startingIndex = 0
-
-                for (i in inputLine.indices) {
-
-                    val indexOfNumberWord = inputLine.indexOf(numberWord, startingIndex)
-
-                    if (indexOfNumberWord != -1) {
-                        numbersPositionHashmap[indexOfNumberWord] = numberTextList[numberWord]!!
-                        startingIndex = indexOfNumberWord + 1
-                    }
-                }
-            }
-
-            val firstNumber = numbersPositionHashmap[numbersPositionHashmap.keys.min()]
-            val lastNumber = numbersPositionHashmap[numbersPositionHashmap.keys.max()]
-
-            val lineTotalCharacters = "$firstNumber" + "$lastNumber"
-
-            val lineTotal = lineTotalCharacters.toInt()
-
-            total += lineTotal
+            numbersPositionHashmap[firstDigitPos] = firstDigit
+            numbersPositionHashmap[lastDigitPos] = lastDigit
         }
 
-        // Part 2 Answer
-        total.println()
+        numberTextList.keys.forEach { numberWord ->
 
+            var startingIndex = 0
+
+            for (i in inputLine.indices) {
+
+                val indexOfNumberWord = inputLine.indexOf(numberWord, startingIndex)
+
+                if (indexOfNumberWord != -1) {
+                    numbersPositionHashmap[indexOfNumberWord] = numberTextList[numberWord]!!
+                    startingIndex = indexOfNumberWord + 1
+                }
+            }
+        }
+
+        val firstNumber = numbersPositionHashmap[numbersPositionHashmap.keys.min()]
+        val lastNumber = numbersPositionHashmap[numbersPositionHashmap.keys.max()]
+
+        val lineTotalCharacters = "$firstNumber" + "$lastNumber"
+
+        val lineTotal = lineTotalCharacters.toInt()
+
+        total += lineTotal
     }
 
-    val inputStream = readInputStream("day1_input")
-
-    getNumbersAsWordsFirst(inputStream)
+    // Part 2 Answer
+    return total
 }
